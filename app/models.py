@@ -9,7 +9,6 @@ from app.database import Base
 
 
 class Wallet(Base):
-    """Кошелёк пользователя."""
 
     __tablename__ = "wallets"
 

@@ -1,9 +1,3 @@
-"""initial wallets table
-
-Revision ID: 0001
-Revises:
-Create Date: 2024-01-01 00:00:00
-"""
 from collections.abc import Sequence
 
 import sqlalchemy as sa

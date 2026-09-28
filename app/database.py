@@ -11,7 +11,7 @@ from app.config import settings
 
 
 class Base(DeclarativeBase):
-    """Базовый класс для ORM-моделей."""
+    pass
 
 
 engine = create_async_engine(
@@ -29,6 +29,5 @@ AsyncSessionLocal = async_sessionmaker(
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
-    """FastAPI-зависимость: выдаёт сессию БД на время запроса."""
     async with AsyncSessionLocal() as session:
         yield session

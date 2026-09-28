@@ -12,7 +12,6 @@ from app.schemas import OperationType
 async def get_wallet(
     session: AsyncSession, wallet_id: uuid.UUID
 ) -> Wallet:
-    """Вернуть кошелёк или бросить 404."""
     wallet = await session.get(Wallet, wallet_id)
     if wallet is None:
         raise WalletNotFoundError()
@@ -22,7 +21,6 @@ async def get_wallet(
 async def create_wallet(
     session: AsyncSession, balance: Decimal = Decimal("0")
 ) -> Wallet:
-    """Создать новый кошелёк (используется в тестах/сидинге)."""
     wallet = Wallet(balance=balance)
     session.add(wallet)
     await session.commit()
@@ -36,14 +34,6 @@ async def apply_operation(
     operation_type: OperationType,
     amount: Decimal,
 ) -> Wallet:
-    """
-    Изменить баланс кошелька.
-
-    Использует SELECT ... FOR UPDATE, чтобы параллельные операции
-    над одним кошельком выполнялись последовательно. Также проверка
-    достаточности средств выполняется в одной транзакции с изменением,
-    что защищает от отрицательного баланса.
-    """
     async with session.begin():
         result = await session.execute(
             select(Wallet)

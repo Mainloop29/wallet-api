@@ -2,7 +2,6 @@ from fastapi import HTTPException, status
 
 
 class WalletNotFoundError(HTTPException):
-    """Кошелёк не найден."""
 
     def __init__(self) -> None:
         super().__init__(
@@ -12,7 +11,6 @@ class WalletNotFoundError(HTTPException):
 
 
 class InsufficientFundsError(HTTPException):
-    """Недостаточно средств для списания."""
 
     def __init__(self) -> None:
         super().__init__(
