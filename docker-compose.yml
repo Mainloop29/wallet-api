@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: wallet
+      POSTGRES_PASSWORD: wallet
+      POSTGRES_DB: wallet_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wallet -d wallet_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://wallet:wallet@db:5432/wallet_db
+    ports:
+      - "8000:8000"
+  
+  tests:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://wallet:wallet@db:5432/wallet_db
+    volumes:
+      - ./tests:/app/tests
+      - ./pyproject.toml:/app/pyproject.toml
+    command: ["sh", "-c", "pip install pytest pytest-asyncio httpx && pytest -v"]
+    profiles: ["tests"]
+
+volumes:
+  pgdata:
