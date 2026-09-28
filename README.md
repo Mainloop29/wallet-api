@@ -214,15 +214,13 @@ cp .env.example .env
 
 ```bash
 python -m venv .venv
-source .venv/Scripts/activate   # Windows Git Bash
+source .venv/Scripts/activate 
 # или
-source .venv/bin/activate       # Linux/macOS
+source .venv/bin/activate   
 
 pip install -r requirements.txt
 
-# PostgreSQL должен быть доступен
 cp .env.example .env
-# проверь, что DATABASE_URL указывает на localhost
 
 alembic upgrade head
 uvicorn app.main:app --reload
